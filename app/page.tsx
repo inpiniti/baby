@@ -41,7 +41,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(relativeTime);
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 type BabyRecord = {
   date: string;
@@ -81,11 +81,15 @@ export default function Home() {
 }
 
 const Profile = () => {
-  const 태어난날짜 = dayjs("2024.12.17");
-  const 태어난지 = `${dayjs().diff(태어난날짜, "day")}일 되었구요.`;
-  const 주로는 = `${Math.floor(
-    dayjs().diff(태어난날짜, "week")
-  )}주 아기입니다.`;
+  const [태어난날짜] = useState(dayjs("2024.12.17"));
+  const 태어난지 = useMemo(
+    () => `${dayjs().diff(태어난날짜, "day")}일 되었구요.`,
+    [태어난날짜]
+  );
+  const 주로는 = useMemo(
+    () => `${Math.floor(dayjs().diff(태어난날짜, "week"))}주 아기입니다.`,
+    [태어난날짜]
+  );
   return (
     <Card>
       <CardHeader>
