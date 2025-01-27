@@ -82,13 +82,16 @@ export default function Home() {
 }
 
 const Profile = () => {
-  const [birthDate] = useState(dayjs("2024.12.17", "YYYY.MM.DD"));
+  const [birthDate, setBirthDate] = useState("");
+  useEffect(() => {
+    setBirthDate(dayjs("2024.12.17").format("YYYY.MM.DD"));
+  }, []);
   const daysSinceBirth = useMemo(
-    () => `${dayjs().diff(birthDate, "day")}일 되었구요.`,
+    () => `${dayjs().diff(dayjs(birthDate), "day")}일 되었구요.`,
     [birthDate]
   );
   const weeksSinceBirth = useMemo(
-    () => `${Math.floor(dayjs().diff(birthDate, "week"))}주 되었습니다.`,
+    () => `${Math.floor(dayjs().diff(dayjs(birthDate), "week"))}주 되었습니다.`,
     [birthDate]
   );
   return (
@@ -112,7 +115,7 @@ const Profile = () => {
               <Input
                 id="name"
                 placeholder="Name of your project"
-                value={`${birthDate.format("YYYY.MM.DD")} 이구요.`}
+                value={`${birthDate} 이구요.`}
               />
             </div>
             <div className="flex flex-col space-y-1.5">
