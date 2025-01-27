@@ -342,17 +342,29 @@ const Add = ({ onChange }: { onChange: () => void }) => {
         </DialogHeader>
         <DialogFooter>
           <div className="flex flex-col gap-4 w-full">
-            <div className="flex bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center">
-              <Milk onClick={() => handleRecord("분유")} /> 분유
+            <div
+              className="flex bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
+              onClick={() => handleRecord("분유")}
+            >
+              <Milk /> 분유
             </div>
-            <div className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center">
-              <User onClick={() => handleRecord("모유")} /> 모유
+            <div
+              className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
+              onClick={() => handleRecord("모유")}
+            >
+              <User /> 모유
             </div>
-            <div className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center">
-              <Droplets onClick={() => handleRecord("소변")} /> 소변
+            <div
+              className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
+              onClick={() => handleRecord("소변")}
+            >
+              <Droplets /> 소변
             </div>
-            <div className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center">
-              <Toilet onClick={() => handleRecord("대변")} /> 대변
+            <div
+              className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
+              onClick={() => handleRecord("대변")}
+            >
+              <Toilet /> 대변
             </div>
           </div>
         </DialogFooter>
