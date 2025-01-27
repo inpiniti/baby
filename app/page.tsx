@@ -56,6 +56,7 @@ export default function Home() {
   }, []);
 
   const handleChange = () => {
+    alert("데이터 업데이트");
     fetchData();
   };
 
@@ -107,6 +108,15 @@ const Profile = () => {
         <form>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="name">태어난 날짜는</Label>
+              <Input
+                id="name"
+                placeholder="Name of your project"
+                value={`${birthDate.format("YYYY.MM.DD")} 이구요.`}
+              />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              {dayjs().diff(birthDate, "day")}
               <Label htmlFor="name">태어난지는</Label>
               <Input
                 id="name"
@@ -143,14 +153,17 @@ const LastRecord = ({ list }: { list: BabyRecord[] }) => {
       ) => {
         const record = list.find((record) => record.type === type);
         if (record) {
-          setLast(
-            dayjs(record.date)
-              .fromNow(true)
-              .replace("minutes", "분")
-              .replace("minute", "분")
-              .replace("hours", "시간")
-              .replace("hour", "시간") + ` 전에 ${suffix}`
-          );
+          const diff = dayjs().diff(dayjs(record.date), "minute");
+          const hours = Math.floor(diff / 60);
+          const minutes = diff % 60;
+          let timeString = "";
+          if (hours > 0) {
+            timeString += `${hours}시간 `;
+          }
+          if (minutes > 0) {
+            timeString += `${minutes}분 `;
+          }
+          setLast(timeString + `전에 ${suffix}`);
         }
       };
 
@@ -289,6 +302,7 @@ const Add = ({ onChange }: { onChange: () => void }) => {
   const [open, setOpen] = useState(false);
   //const [open2, setOpen2] = useState(false);
   const handleRecord = async (type: string) => {
+    alert(`handleRecord ${type}`);
     await fetch("/api/history/post", {
       method: "POST",
       body: JSON.stringify({
@@ -297,9 +311,11 @@ const Add = ({ onChange }: { onChange: () => void }) => {
         date: dayjs().format("YYYY-MM-DD HH:mm:ss"),
       }),
     });
+    alert(`등록 완료`);
     setOpen(false);
-
+    alert(`창닫기`);
     onChange();
+    alert(`데이터 업데이트`);
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
