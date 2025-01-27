@@ -82,10 +82,8 @@ export default function Home() {
 }
 
 const Profile = () => {
-  const [birthDate, setBirthDate] = useState("");
-  useEffect(() => {
-    setBirthDate(dayjs("2024.12.17").format("YYYY.MM.DD"));
-  }, []);
+  const birthDate = "2024.12.17";
+
   const daysSinceBirth = useMemo(
     () => `${dayjs().diff(dayjs(birthDate), "day")}일 되었구요.`,
     [birthDate]
