@@ -84,14 +84,21 @@ export default function Home() {
 const Profile = () => {
   const birthDate = "2024.12.17";
 
-  const daysSinceBirth = useMemo(
-    () => `${dayjs().diff(dayjs(birthDate), "day")}일 되었구요.`,
-    [birthDate]
-  );
-  const weeksSinceBirth = useMemo(
-    () => `${Math.floor(dayjs().diff(dayjs(birthDate), "week"))}주 되었습니다.`,
-    [birthDate]
-  );
+  const daysSinceBirth = useMemo(() => {
+    const birth = new Date(birthDate);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - birth.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return `${diffDays}일 되었구요.`;
+  }, [birthDate]);
+
+  const weeksSinceBirth = useMemo(() => {
+    const birth = new Date(birthDate);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - birth.getTime());
+    const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
+    return `${diffWeeks}주 되었습니다.`;
+  }, [birthDate]);
   return (
     <Card>
       <CardHeader>
