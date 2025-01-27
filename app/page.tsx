@@ -41,7 +41,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(relativeTime);
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type BabyRecord = {
   date: string;
@@ -75,6 +75,7 @@ export default function Home() {
       <Statistics list={list} />
       <List list={list} />
       <Add onChange={handleChange} />
+      <AddAmount />
     </div>
   );
 }
@@ -201,6 +202,7 @@ const LastRecord = ({ list }: { list: BabyRecord[] }) => {
 };
 
 const Statistics = ({ list }: { list: BabyRecord[] }) => {
+  console.log(list);
   return (
     <Card>
       <CardHeader>
@@ -243,51 +245,6 @@ const Statistics = ({ list }: { list: BabyRecord[] }) => {
     </Card>
   );
 };
-
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-];
 
 const List = ({ list }: { list: BabyRecord[] }) => {
   if (!Array.isArray(list)) {
@@ -381,15 +338,9 @@ const Add = ({ onChange }: { onChange: () => void }) => {
   );
 };
 
-const AddAmount = ({
-  open,
-  setOpen,
-}: {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}) => {
+const AddAmount = () => {
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
