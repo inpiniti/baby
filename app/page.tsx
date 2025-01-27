@@ -83,11 +83,11 @@ export default function Home() {
 const Profile = () => {
   const [birthDate] = useState(dayjs("2024.12.17", "YYYY.MM.DD"));
   const daysSinceBirth = useMemo(
-    () => `${dayjs().diff(birthDate, "day")} days old.`,
+    () => `${dayjs().diff(birthDate, "day")}일 되었구요.`,
     [birthDate]
   );
   const weeksSinceBirth = useMemo(
-    () => `${Math.floor(dayjs().diff(birthDate, "week"))} weeks old.`,
+    () => `${Math.floor(dayjs().diff(birthDate, "week"))}주 되었습니다.`,
     [birthDate]
   );
   return (
@@ -288,7 +288,7 @@ const List = ({ list }: { list: BabyRecord[] }) => {
 const Add = ({ onChange }: { onChange: () => void }) => {
   const [open, setOpen] = useState(false);
   //const [open2, setOpen2] = useState(false);
-  const 기록 = async (type: string) => {
+  const handleRecord = async (type: string) => {
     await fetch("/api/history/post", {
       method: "POST",
       body: JSON.stringify({
@@ -324,16 +324,16 @@ const Add = ({ onChange }: { onChange: () => void }) => {
         <DialogFooter>
           <div className="flex flex-col gap-4 w-full">
             <div className="flex bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center">
-              <Milk onClick={() => 기록("분유")} /> 분유
+              <Milk onClick={() => handleRecord("분유")} /> 분유
             </div>
             <div className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center">
-              <User onClick={() => 기록("모유")} /> 모유
+              <User onClick={() => handleRecord("모유")} /> 모유
             </div>
             <div className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center">
-              <Droplets onClick={() => 기록("소변")} /> 소변
+              <Droplets onClick={() => handleRecord("소변")} /> 소변
             </div>
             <div className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center">
-              <Toilet onClick={() => 기록("대변")} /> 대변
+              <Toilet onClick={() => handleRecord("대변")} /> 대변
             </div>
           </div>
         </DialogFooter>
