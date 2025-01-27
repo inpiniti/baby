@@ -284,8 +284,8 @@ const List = ({ list }: { list: BabyRecord[] }) => {
 const Add = ({ onChange }: { onChange: () => void }) => {
   const [open, setOpen] = useState(false);
   //const [open2, setOpen2] = useState(false);
-  const 기록 = (type: string) => {
-    fetch("/api/history/post", {
+  const 기록 = async (type: string) => {
+    await fetch("/api/history/post", {
       method: "POST",
       body: JSON.stringify({
         type,
