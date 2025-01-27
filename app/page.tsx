@@ -81,14 +81,14 @@ export default function Home() {
 }
 
 const Profile = () => {
-  const [태어난날짜] = useState(dayjs("2024.12.17", "YYYY.MM.DD"));
-  const 태어난지 = useMemo(
-    () => `${dayjs().diff(태어난날짜, "day")}일 되었구요.`,
-    [태어난날짜]
+  const [birthDate] = useState(dayjs("2024.12.17", "YYYY.MM.DD"));
+  const daysSinceBirth = useMemo(
+    () => `${dayjs().diff(birthDate, "day")} days old.`,
+    [birthDate]
   );
-  const 주로는 = useMemo(
-    () => `${Math.floor(dayjs().diff(태어난날짜, "week"))}주 아기입니다.`,
-    [태어난날짜]
+  const weeksSinceBirth = useMemo(
+    () => `${Math.floor(dayjs().diff(birthDate, "week"))} weeks old.`,
+    [birthDate]
   );
   return (
     <Card>
@@ -111,7 +111,7 @@ const Profile = () => {
               <Input
                 id="name"
                 placeholder="Name of your project"
-                value={태어난지}
+                value={daysSinceBirth}
               />
             </div>
             <div className="flex flex-col space-y-1.5">
@@ -119,7 +119,7 @@ const Profile = () => {
               <Input
                 id="name"
                 placeholder="Name of your project"
-                value={주로는}
+                value={weeksSinceBirth}
               />
             </div>
           </div>
@@ -130,9 +130,9 @@ const Profile = () => {
 };
 
 const LastRecord = ({ list }: { list: BabyRecord[] }) => {
-  const [last분유, setLast분유] = useState("");
-  const [last소변, setLast소변] = useState("");
-  const [last대변, setLast대변] = useState("");
+  const [lastMilk, setLastMilk] = useState("");
+  const [lastPee, setLastPee] = useState("");
+  const [lastPoop, setLastPoop] = useState("");
 
   useEffect(() => {
     if (Array.isArray(list)) {
@@ -154,9 +154,9 @@ const LastRecord = ({ list }: { list: BabyRecord[] }) => {
         }
       };
 
-      updateLastRecord("분유", setLast분유, "분유를 먹었습니다.");
-      updateLastRecord("소변", setLast소변, "소변을 보았습니다.");
-      updateLastRecord("대변", setLast대변, "대변을 보았습니다.");
+      updateLastRecord("분유", setLastMilk, "분유를 먹었습니다.");
+      updateLastRecord("소변", setLastPee, "소변을 보았습니다.");
+      updateLastRecord("대변", setLastPoop, "대변을 보았습니다.");
     }
   }, [list]);
 
@@ -180,7 +180,7 @@ const LastRecord = ({ list }: { list: BabyRecord[] }) => {
             <Input
               id="name"
               placeholder="Name of your project"
-              value={last분유}
+              value={lastMilk}
             />
           </div>
           <div className="flex flex-col space-y-1.5">
@@ -188,7 +188,7 @@ const LastRecord = ({ list }: { list: BabyRecord[] }) => {
             <Input
               id="name"
               placeholder="Name of your project"
-              value={last소변}
+              value={lastPee}
             />
           </div>
           <div className="flex flex-col space-y-1.5">
@@ -196,7 +196,7 @@ const LastRecord = ({ list }: { list: BabyRecord[] }) => {
             <Input
               id="name"
               placeholder="Name of your project"
-              value={last대변}
+              value={lastPoop}
             />
           </div>
         </div>
