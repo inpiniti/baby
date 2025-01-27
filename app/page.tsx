@@ -81,7 +81,7 @@ export default function Home() {
 }
 
 const Profile = () => {
-  const [태어난날짜] = useState(dayjs("2024.12.17"));
+  const [태어난날짜] = useState(dayjs("2024.12.17", "YYYY.MM.DD"));
   const 태어난지 = useMemo(
     () => `${dayjs().diff(태어난날짜, "day")}일 되었구요.`,
     [태어난날짜]
