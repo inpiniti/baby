@@ -120,13 +120,10 @@ const Profile = () => {
 };
 
 const Day = () => {
-  const birthDate = "2024.12.17";
-  const daysSinceBirth = useMemo(() => {
-    const birth = dayjs(birthDate);
-    const now = dayjs();
-    const diffDays = now.diff(birth, "day") + 1;
-    return `${diffDays}일`;
-  }, [birthDate]);
+  const birth = dayjs("2024.12.17");
+  const now = dayjs();
+  const diffDays = now.diff(birth, "day") + 1;
+  const daysSinceBirth = `${diffDays}일`;
 
   return (
     <Card className="flex-1 bg-zinc-100 border-0 shadow-none">
