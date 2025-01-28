@@ -123,7 +123,6 @@ const Profile = () => {
               />
             </div>
             <div className="flex flex-col space-y-1.5">
-              {dayjs().diff(birthDate, "day")}
               <Label htmlFor="name">태어난지는</Label>
               <Input
                 id="name"
@@ -304,24 +303,18 @@ const List = ({ list }: { list: BabyRecord[] }) => {
           <TableRow>
             <TableHead>시간</TableHead>
             <TableHead>종류</TableHead>
-            <TableHead className="text-right">모유량</TableHead>
+            <TableHead>모유량</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {list.map((baby: BabyRecord) => (
             <TableRow key={baby.date}>
-              <TableCell className="font-medium">{baby.date}</TableCell>
+              <TableCell>{baby.date}</TableCell>
               <TableCell>{baby.type}</TableCell>
               <TableCell>{baby.amount}</TableCell>
             </TableRow>
           ))}
         </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">$2,500.00</TableCell>
-          </TableRow>
-        </TableFooter>
       </Table>
     </Card>
   );
