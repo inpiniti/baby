@@ -73,7 +73,10 @@ export default function Home() {
   };
 
   const fetchData = async () => {
-    const response = await fetch("/api/history", { cache: "no-store" });
+    const response = await fetch(
+      `/api/history?timestamp=${new Date().getTime()}`,
+      { cache: "no-store" }
+    );
     const data = await response.json();
     setList(data);
   };
