@@ -14,7 +14,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -291,10 +290,6 @@ const Statistics = ({ list }: { list: BabyRecord[] }) => {
 };
 
 const List = ({ list }: { list: BabyRecord[] }) => {
-  if (!Array.isArray(list)) {
-    return null;
-  }
-
   const [filterList, setFilterList] = useState<BabyRecord[]>([]);
   useEffect(() => {
     if (Array.isArray(list)) {
@@ -303,6 +298,10 @@ const List = ({ list }: { list: BabyRecord[] }) => {
       setFilterList(filteredList);
     }
   }, [list]);
+
+  if (!Array.isArray(list)) {
+    return null;
+  }
 
   return (
     <Card>
