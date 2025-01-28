@@ -62,7 +62,7 @@ export default function Home() {
   };
 
   const fetchData = async () => {
-    const response = await fetch("/api/history");
+    const response = await fetch("/api/history", { cache: "no-store" });
     const data = await response.json();
     setList(data);
   };
