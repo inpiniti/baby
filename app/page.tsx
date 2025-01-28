@@ -73,6 +73,7 @@ export default function Home() {
   };
 
   const fetchData = async () => {
+    alert("리스트 갱신");
     const response = await fetch(
       `/api/history?timestamp=${new Date().getTime()}`,
       { cache: "no-store" }
