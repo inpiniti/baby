@@ -73,7 +73,7 @@ export default function Home() {
       <Profile />
       <LastRecord list={list} />
       <Statistics list={list} />
-      <List list={list} />
+      <List list={list} onChange={handleChange} />
       <Add onChange={handleChange} />
     </div>
   );
@@ -164,9 +164,8 @@ const LastRecord = ({ list }: { list: BabyRecord[] }) => {
           if (hours > 0) {
             timeString += `${hours}시간 `;
           }
-          if (minutes > 0) {
-            timeString += `${minutes}분 `;
-          }
+          timeString += `${minutes}분 `;
+
           setLast(timeString + `전에 ${suffix}`);
         }
       };
@@ -289,7 +288,13 @@ const Statistics = ({ list }: { list: BabyRecord[] }) => {
   );
 };
 
-const List = ({ list }: { list: BabyRecord[] }) => {
+const List = ({
+  list,
+  onChange,
+}: {
+  list: BabyRecord[];
+  onChange: () => void;
+}) => {
   const [filterList, setFilterList] = useState<BabyRecord[]>([]);
   useEffect(() => {
     if (Array.isArray(list)) {
@@ -310,7 +315,7 @@ const List = ({ list }: { list: BabyRecord[] }) => {
           <TableRow>
             <TableHead>시간</TableHead>
             <TableHead>종류</TableHead>
-            <TableHead>모유량</TableHead>
+            <TableHead>용량</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -319,7 +324,7 @@ const List = ({ list }: { list: BabyRecord[] }) => {
               <TableCell>{baby.date}</TableCell>
               <TableCell>{baby.type}</TableCell>
               <TableCell>
-                <PowderedMilkRecord baby={baby} />
+                <PowderedMilkRecord baby={baby} onChange={onChange} />
               </TableCell>
             </TableRow>
           ))}
@@ -329,7 +334,13 @@ const List = ({ list }: { list: BabyRecord[] }) => {
   );
 };
 
-const PowderedMilkRecord = ({ baby }: { baby: BabyRecord }) => {
+const PowderedMilkRecord = ({
+  baby,
+  onChange,
+}: {
+  baby: BabyRecord;
+  onChange: () => void;
+}) => {
   const [open, setOpen] = useState(false);
   const [loadingAmount, setLoadingAmount] = useState<number | null>(null);
 
@@ -345,9 +356,10 @@ const PowderedMilkRecord = ({ baby }: { baby: BabyRecord }) => {
     });
     setLoadingAmount(null);
     setOpen(false);
+    onChange();
   };
 
-  if (baby.type !== "분유") return null;
+  if (!["분유", "모유"].includes(baby.type)) return null;
 
   if (baby.amount === 0) {
     return (
@@ -368,40 +380,60 @@ const PowderedMilkRecord = ({ baby }: { baby: BabyRecord }) => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 w-full">
               <div
                 className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
                 onClick={() => handleAmount(60)}
               >
-                {loadingAmount === 60 ? <LoaderCircle /> : <Milk />}
+                {loadingAmount === 60 ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  <Milk />
+                )}
                 60ml
               </div>
               <div
                 className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
                 onClick={() => handleAmount(70)}
               >
-                {loadingAmount === 70 ? <LoaderCircle /> : <Milk />}
+                {loadingAmount === 70 ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  <Milk />
+                )}
                 70ml
               </div>
               <div
                 className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
                 onClick={() => handleAmount(80)}
               >
-                {loadingAmount === 80 ? <LoaderCircle /> : <Milk />}
+                {loadingAmount === 80 ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  <Milk />
+                )}
                 80ml
               </div>
               <div
                 className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
                 onClick={() => handleAmount(90)}
               >
-                {loadingAmount === 90 ? <LoaderCircle /> : <Milk />}
+                {loadingAmount === 90 ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  <Milk />
+                )}
                 90ml
               </div>
               <div
                 className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
                 onClick={() => handleAmount(100)}
               >
-                {loadingAmount === 100 ? <LoaderCircle /> : <Milk />}
+                {loadingAmount === 100 ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  <Milk />
+                )}
                 100ml
               </div>
             </div>
@@ -459,28 +491,44 @@ const Add = ({ onChange }: { onChange: () => void }) => {
               className="flex bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
               onClick={() => handleRecord("분유")}
             >
-              {loadingType === "분유" ? <LoaderCircle /> : <Milk />}
+              {loadingType === "분유" ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                <Milk />
+              )}
               분유
             </div>
             <div
               className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
               onClick={() => handleRecord("모유")}
             >
-              {loadingType === "모유" ? <LoaderCircle /> : <User />}
+              {loadingType === "모유" ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                <User />
+              )}
               모유
             </div>
             <div
               className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
               onClick={() => handleRecord("소변")}
             >
-              {loadingType === "소변" ? <LoaderCircle /> : <Droplets />}
+              {loadingType === "소변" ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                <Droplets />
+              )}
               소변
             </div>
             <div
               className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
               onClick={() => handleRecord("대변")}
             >
-              {loadingType === "대변" ? <LoaderCircle /> : <Toilet />}
+              {loadingType === "대변" ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                <Toilet />
+              )}
               대변
             </div>
           </div>
