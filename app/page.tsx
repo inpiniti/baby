@@ -36,6 +36,7 @@ import {
   Droplets,
   User,
   LoaderCircle,
+  RefreshCcw,
 } from "lucide-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -309,7 +310,10 @@ const List = ({
   }
 
   return (
-    <Card>
+    <Card className="mt-0">
+      <div className="p-2 flex gap-2">
+        히스토리 <RefreshCcw onClick={onChange} />
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
