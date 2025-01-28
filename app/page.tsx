@@ -43,7 +43,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(relativeTime);
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, use } from "react";
 
 type BabyRecord = {
   date: string;
@@ -148,14 +148,14 @@ const Day = () => {
 };
 
 const Week = () => {
-  const birthDate = "2024.12.17";
-  const weeksSinceBirth = useMemo(() => {
-    const birth = new Date(birthDate);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - birth.getTime());
-    const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7)) + 1;
-    return `${diffWeeks}주`;
-  }, [birthDate]);
+  const [weeksSinceBirth, setWeeksSinceBirth] = useState("");
+  useEffect(() => {
+    const birth = dayjs("2024-12-17", "YYYY-MM-DD");
+    const now = dayjs();
+    const diffWeeks = now.diff(birth, "week") + 1;
+    const weeksSinceBirth = `${diffWeeks}주`;
+    setWeeksSinceBirth(weeksSinceBirth);
+  }, []);
 
   return (
     <Card className="flex-1 bg-zinc-100 border-0 shadow-none">
