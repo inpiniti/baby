@@ -227,6 +227,7 @@ const LastRecord = ({ list }: { list: BabyRecord[] }) => {
 };
 
 const Statistics = ({ list }: { list: BabyRecord[] }) => {
+  console.log(list);
   return (
     <Card>
       <CardHeader>
