@@ -37,6 +37,8 @@ import {
   User,
   LoaderCircle,
   RefreshCcw,
+  CalendarPlus,
+  Bed,
 } from "lucide-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -67,12 +69,23 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="flex flex-col gap-2 p-4">
       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
         베이비 로그
       </h1>
       <Profile />
-      <LastRecord list={list} />
+      <div className="flex gap-2">
+        <Day />
+        <Week />
+      </div>
+      <div className="flex gap-2">
+        <LastMilk list={list} />
+        <LastPee list={list} />
+      </div>
+      <div className="flex gap-2">
+        <LastPoop list={list} />
+        <LastSleep list={list} />
+      </div>
       <Statistics list={list} />
       <List list={list} onChange={handleChange} />
       <Add onChange={handleChange} />
@@ -81,13 +94,13 @@ export default function Home() {
 }
 
 const Profile = () => {
-  const birthDate = "2024-12-17";
+  const birthDate = "2024.12.17";
 
   const daysSinceBirth = useMemo(() => {
     const birth = dayjs(birthDate);
     const now = dayjs();
     const diffDays = now.diff(birth, "day") + 1;
-    return `${diffDays}일 되었구요.`;
+    return `${diffDays}일`;
   }, [birthDate]);
 
   const weeksSinceBirth = useMemo(() => {
@@ -95,58 +108,193 @@ const Profile = () => {
     const now = new Date();
     const diffTime = Math.abs(now.getTime() - birth.getTime());
     const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7)) + 1;
-    return `${diffWeeks}주 되었습니다.`;
+    return `${diffWeeks}주`;
   }, [birthDate]);
   return (
-    <Card>
+    <Card className="bg-zinc-950 text-zinc-50 flex-1 border-0 shadow-none">
       <CardHeader>
         <CardTitle>
           <div className="flex items-center gap-1">
-            <Baby /> 정은찬
+            <Baby /> 정은찬 (鄭恩贊)
           </div>
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-zinc-300">
           영규니와 아름이의 첫째아들래미 귀염둥이입니다. 은혜/사랑할 은에
-          도울/나아갈 찬이며, 갑진년 병자월 을묘일 임오시에 태어난 아기입니다.
+          도울/나아갈 찬이며, 갑진년 병자월 을묘일 임오시 푸른용의 해에 태어난
+          아기입니다. <br />
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">태어난 날짜는</Label>
-              <Input
-                id="name"
-                placeholder="Name of your project"
-                value={`${birthDate} 이구요.`}
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">태어난지는</Label>
-              <Input
-                id="name"
-                placeholder="Name of your project"
-                value={daysSinceBirth}
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="framework">주로는</Label>
-              <Input
-                id="name"
-                placeholder="Name of your project"
-                value={weeksSinceBirth}
-              />
-            </div>
+        <div className="grid w-full items-center gap-2">
+          <div className="flex flex-col space-y-1.5 text-3xl font-bold">
+            {birthDate}
           </div>
-        </form>
+        </div>
       </CardContent>
     </Card>
   );
 };
 
-const LastRecord = ({ list }: { list: BabyRecord[] }) => {
+const Day = () => {
+  const birthDate = "2024.12.17";
+  const daysSinceBirth = useMemo(() => {
+    const birth = dayjs(birthDate);
+    const now = dayjs();
+    const diffDays = now.diff(birth, "day") + 1;
+    return `${diffDays}일`;
+  }, [birthDate]);
+
+  return (
+    <Card className="flex-1 bg-zinc-100 border-0 shadow-none">
+      <CardHeader>
+        <CardTitle>
+          <div className="flex items-center gap-1">
+            <CalendarPlus /> D-Day
+          </div>
+        </CardTitle>
+        <CardDescription>태어난지</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="text-3xl font-bold">{daysSinceBirth}</div>
+      </CardContent>
+    </Card>
+  );
+};
+
+const Week = () => {
+  const birthDate = "2024.12.17";
+  const weeksSinceBirth = useMemo(() => {
+    const birth = new Date(birthDate);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - birth.getTime());
+    const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7)) + 1;
+    return `${diffWeeks}주`;
+  }, [birthDate]);
+
+  return (
+    <Card className="flex-1 bg-zinc-100 border-0 shadow-none">
+      <CardHeader>
+        <CardTitle>
+          <div className="flex items-center gap-1">
+            <CalendarPlus /> D-Week
+          </div>
+        </CardTitle>
+        <CardDescription>주로는</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="text-3xl font-bold">{weeksSinceBirth}</div>
+      </CardContent>
+    </Card>
+  );
+};
+
+const LastMilk = ({ list }: { list: BabyRecord[] }) => {
   const [lastMilk, setLastMilk] = useState("");
+
+  useEffect(() => {
+    calculateTime();
+    const interval = setInterval(calculateTime, 60000); // 1분 = 60000밀리초
+
+    return () => clearInterval(interval);
+  }, [list]);
+
+  const calculateTime = () => {
+    if (Array.isArray(list)) {
+      const updateLastRecord = (
+        type: string,
+        setLast: (value: string) => void
+      ) => {
+        const record = list.find((record) => record.type === type);
+        if (record) {
+          const diff = dayjs().diff(dayjs(record.date), "minute");
+          const hours = Math.floor(diff / 60);
+          const minutes = diff % 60;
+          let timeString = "";
+          if (hours > 0) {
+            timeString += `${hours}시간 `;
+          }
+          timeString += `${minutes}분 `;
+
+          setLast(timeString + `전`);
+        }
+      };
+
+      updateLastRecord("분유", setLastMilk);
+    }
+  };
+
+  return (
+    <Card className="flex-1 bg-zinc-50 border-0 shadow-none">
+      <CardHeader>
+        <CardTitle>
+          <div className="flex items-center gap-1">
+            <Milk />
+            분유
+          </div>
+        </CardTitle>
+        <CardDescription>몇 시간 전에</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{lastMilk}</div>
+      </CardContent>
+    </Card>
+  );
+};
+
+const LastPee = ({ list }: { list: BabyRecord[] }) => {
   const [lastPee, setLastPee] = useState("");
+
+  useEffect(() => {
+    calculateTime();
+    const interval = setInterval(calculateTime, 60000); // 1분 = 60000밀리초
+
+    return () => clearInterval(interval);
+  }, [list]);
+
+  const calculateTime = () => {
+    if (Array.isArray(list)) {
+      const updateLastRecord = (
+        type: string,
+        setLast: (value: string) => void
+      ) => {
+        const record = list.find((record) => record.type === type);
+        if (record) {
+          const diff = dayjs().diff(dayjs(record.date), "minute");
+          const hours = Math.floor(diff / 60);
+          const minutes = diff % 60;
+          let timeString = "";
+          if (hours > 0) {
+            timeString += `${hours}시간 `;
+          }
+          timeString += `${minutes}분 `;
+
+          setLast(timeString + `전`);
+        }
+      };
+
+      updateLastRecord("소변", setLastPee);
+    }
+  };
+
+  return (
+    <Card className="flex-1 bg-zinc-50 border-0 shadow-none">
+      <CardHeader>
+        <CardTitle>
+          <div className="flex items-center gap-1">
+            <Droplets />
+            소변
+          </div>
+        </CardTitle>
+        <CardDescription>몇 시간 전에</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{lastPee}</div>
+      </CardContent>
+    </Card>
+  );
+};
+
+const LastPoop = ({ list }: { list: BabyRecord[] }) => {
   const [lastPoop, setLastPoop] = useState("");
 
   useEffect(() => {
@@ -160,8 +308,7 @@ const LastRecord = ({ list }: { list: BabyRecord[] }) => {
     if (Array.isArray(list)) {
       const updateLastRecord = (
         type: string,
-        setLast: (value: string) => void,
-        suffix: string
+        setLast: (value: string) => void
       ) => {
         const record = list.find((record) => record.type === type);
         if (record) {
@@ -174,56 +321,79 @@ const LastRecord = ({ list }: { list: BabyRecord[] }) => {
           }
           timeString += `${minutes}분 `;
 
-          setLast(timeString + `전에 ${suffix}`);
+          setLast(timeString + `전`);
         }
       };
 
-      updateLastRecord("분유", setLastMilk, "분유를 먹었습니다.");
-      updateLastRecord("소변", setLastPee, "소변을 보았습니다.");
-      updateLastRecord("대변", setLastPoop, "대변을 보았습니다.");
+      updateLastRecord("대변", setLastPoop);
     }
   };
 
   return (
-    <Card>
+    <Card className="flex-1 bg-zinc-50 border-0 shadow-none">
       <CardHeader>
         <CardTitle>
           <div className="flex items-center gap-1">
-            <Videotape />
-            마지막 기록
+            <Toilet />
+            대변
           </div>
         </CardTitle>
-        <CardDescription>
-          몇 시간 전에 분유, 소변, 대변을 보았는지 보여주는 화면입니다.
-        </CardDescription>
+        <CardDescription>몇 시간 전에</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid w-full items-center gap-4">
-          <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="name">분유</Label>
-            <Input
-              id="name"
-              placeholder="Name of your project"
-              value={lastMilk}
-            />
+        <div className="text-2xl font-bold">{lastPoop}</div>
+      </CardContent>
+    </Card>
+  );
+};
+
+const LastSleep = ({ list }: { list: BabyRecord[] }) => {
+  const [lastSleep, setLastSleep] = useState("");
+
+  useEffect(() => {
+    calculateTime();
+    const interval = setInterval(calculateTime, 60000); // 1분 = 60000밀리초
+
+    return () => clearInterval(interval);
+  }, [list]);
+
+  const calculateTime = () => {
+    if (Array.isArray(list)) {
+      const updateLastRecord = (
+        type: string,
+        setLast: (value: string) => void
+      ) => {
+        const record = list.find((record) => record.type === type);
+        if (record) {
+          const diff = dayjs().diff(dayjs(record.date), "minute");
+          const hours = Math.floor(diff / 60);
+          const minutes = diff % 60;
+          let timeString = "";
+          if (hours > 0) {
+            timeString += `${hours}시간 `;
+          }
+          timeString += `${minutes}분 `;
+
+          setLast(timeString + `전`);
+        }
+      };
+
+      updateLastRecord("잠", setLastSleep);
+    }
+  };
+
+  return (
+    <Card className="flex-1 bg-zinc-50 border-0 shadow-none">
+      <CardHeader>
+        <CardTitle>
+          <div className="flex items-center gap-1">
+            <Bed />잠
           </div>
-          <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="framework">소변</Label>
-            <Input
-              id="name"
-              placeholder="Name of your project"
-              value={lastPee}
-            />
-          </div>
-          <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="framework">대변</Label>
-            <Input
-              id="name"
-              placeholder="Name of your project"
-              value={lastPoop}
-            />
-          </div>
-        </div>
+        </CardTitle>
+        <CardDescription>몇 시간 전에</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{lastSleep}</div>
       </CardContent>
     </Card>
   );
@@ -250,11 +420,11 @@ const Statistics = ({ list }: { list: BabyRecord[] }) => {
   }, [filterList]);
 
   const averageAmount = useMemo(() => {
-    return totalAmount / filterList.length;
+    return Math.round(totalAmount / filterList.length);
   }, [totalAmount, filterList]);
 
   return (
-    <Card>
+    <Card className="bg-zinc-100 border-0 shadow-none">
       <CardHeader>
         <CardTitle>
           <div className="flex items-center gap-1">
@@ -332,7 +502,7 @@ const List = ({
         <TableBody>
           {filterList.map((baby: BabyRecord) => (
             <TableRow key={baby.date}>
-              <TableCell>{baby.date}</TableCell>
+              <TableCell>{dayjs(baby.date).format("hh:mm")}</TableCell>
               <TableCell>{baby.type}</TableCell>
               <TableCell>
                 <PowderedMilkRecord baby={baby} onChange={onChange} />
@@ -541,6 +711,17 @@ const Add = ({ onChange }: { onChange: () => void }) => {
                 <Toilet />
               )}
               대변
+            </div>
+            <div
+              className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
+              onClick={() => handleRecord("잠")}
+            >
+              {loadingType === "잠" ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                <Bed />
+              )}
+              잠
             </div>
           </div>
         </DialogFooter>
