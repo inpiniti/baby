@@ -39,11 +39,22 @@ import {
   CalendarPlus,
   Bed,
 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(relativeTime);
-import { useEffect, useState, useMemo, use } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 type BabyRecord = {
   date: string;
@@ -495,28 +506,56 @@ const List = ({
                 <PowderedMilkRecord baby={baby} onChange={onChange} />
               </TableCell>
               <TableCell>
-                <Button
-                  variant={"destructive"}
-                  size="sm"
-                  onClick={async () => {
-                    await fetch("/api/history/delete", {
-                      method: "DELETE",
-                      body: JSON.stringify({
-                        type: baby.type,
-                        date: baby.date,
-                      }),
-                    });
-                    onChange();
-                  }}
-                >
-                  del
-                </Button>
+                <DeleteButton baby={baby} onChange={onChange} />
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </Card>
+  );
+};
+
+const DeleteButton = ({
+  baby,
+  onChange,
+}: {
+  baby: BabyRecord;
+  onChange: () => void;
+}) => {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="destructive" size="sm">
+          del
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>삭제하시겠숩니까?</AlertDialogTitle>
+          <AlertDialogDescription>
+            이 작업은 되돌릴수 없습니다.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>취소</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={async () => {
+              await fetch("/api/history/delete", {
+                method: "DELETE",
+                body: JSON.stringify({
+                  type: baby.type,
+                  date: baby.date,
+                }),
+              });
+              onChange();
+            }}
+          >
+            확인
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 
