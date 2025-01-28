@@ -615,6 +615,17 @@ const PowderedMilkRecord = ({
             <div className="flex flex-col gap-4 w-full">
               <div
                 className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
+                onClick={() => handleAmount(30)}
+              >
+                {loadingAmount === 30 ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  <Milk />
+                )}
+                30ml
+              </div>
+              <div
+                className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
                 onClick={() => handleAmount(60)}
               >
                 {loadingAmount === 60 ? (
@@ -667,6 +678,17 @@ const PowderedMilkRecord = ({
                   <Milk />
                 )}
                 100ml
+              </div>
+              <div
+                className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
+                onClick={() => handleAmount(120)}
+              >
+                {loadingAmount === 120 ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  <Milk />
+                )}
+                120ml
               </div>
             </div>
           </DialogFooter>
