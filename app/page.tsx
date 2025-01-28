@@ -36,6 +36,7 @@ import {
   CirclePlus,
   Droplets,
   User,
+  LoaderCircle,
 } from "lucide-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -56,7 +57,6 @@ export default function Home() {
   }, []);
 
   const handleChange = () => {
-    alert("데이터 업데이트");
     fetchData();
   };
 
@@ -227,7 +227,6 @@ const LastRecord = ({ list }: { list: BabyRecord[] }) => {
 };
 
 const Statistics = ({ list }: { list: BabyRecord[] }) => {
-  console.log(list);
   return (
     <Card>
       <CardHeader>
@@ -308,9 +307,10 @@ const List = ({ list }: { list: BabyRecord[] }) => {
 
 const Add = ({ onChange }: { onChange: () => void }) => {
   const [open, setOpen] = useState(false);
-  //const [open2, setOpen2] = useState(false);
+  const [loadingType, setLoadingType] = useState<string | null>(null);
+
   const handleRecord = async (type: string) => {
-    alert(`handleRecord ${type}`);
+    setLoadingType(type);
     await fetch("/api/history/post", {
       method: "POST",
       body: JSON.stringify({
@@ -319,12 +319,11 @@ const Add = ({ onChange }: { onChange: () => void }) => {
         date: dayjs().format("YYYY-MM-DD HH:mm:ss"),
       }),
     });
-    alert(`등록 완료`);
+    setLoadingType(null);
     setOpen(false);
-    alert(`창닫기`);
     onChange();
-    alert(`데이터 업데이트`);
   };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -351,25 +350,29 @@ const Add = ({ onChange }: { onChange: () => void }) => {
               className="flex bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
               onClick={() => handleRecord("분유")}
             >
-              <Milk /> 분유
+              {loadingType === "분유" ? <LoaderCircle /> : <Milk />}
+              분유
             </div>
             <div
               className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
               onClick={() => handleRecord("모유")}
             >
-              <User /> 모유
+              {loadingType === "모유" ? <LoaderCircle /> : <User />}
+              모유
             </div>
             <div
               className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
               onClick={() => handleRecord("소변")}
             >
-              <Droplets /> 소변
+              {loadingType === "소변" ? <LoaderCircle /> : <Droplets />}
+              소변
             </div>
             <div
               className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
               onClick={() => handleRecord("대변")}
             >
-              <Toilet /> 대변
+              {loadingType === "대변" ? <LoaderCircle /> : <Toilet />}
+              대변
             </div>
           </div>
         </DialogFooter>
