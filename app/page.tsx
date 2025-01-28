@@ -31,7 +31,6 @@ import {
   Milk,
   Toilet,
   Baby,
-  Videotape,
   CirclePlus,
   Droplets,
   User,
@@ -95,21 +94,6 @@ export default function Home() {
 
 const Profile = () => {
   const birthDate = "2024.12.17";
-
-  const daysSinceBirth = useMemo(() => {
-    const birth = dayjs(birthDate);
-    const now = dayjs();
-    const diffDays = now.diff(birth, "day") + 1;
-    return `${diffDays}일`;
-  }, [birthDate]);
-
-  const weeksSinceBirth = useMemo(() => {
-    const birth = new Date(birthDate);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - birth.getTime());
-    const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7)) + 1;
-    return `${diffWeeks}주`;
-  }, [birthDate]);
   return (
     <Card className="bg-zinc-950 text-zinc-50 flex-1 border-0 shadow-none">
       <CardHeader>
