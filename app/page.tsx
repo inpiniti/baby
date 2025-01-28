@@ -87,7 +87,7 @@ const Profile = () => {
   const daysSinceBirth = useMemo(() => {
     const birth = dayjs(birthDate);
     const now = dayjs();
-    const diffDays = now.diff(birth, "day");
+    const diffDays = now.diff(birth, "day") + 1;
     return `${diffDays}일 되었구요.`;
   }, [birthDate]);
 
@@ -95,7 +95,7 @@ const Profile = () => {
     const birth = new Date(birthDate);
     const now = new Date();
     const diffTime = Math.abs(now.getTime() - birth.getTime());
-    const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
+    const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7)) + 1;
     return `${diffWeeks}주 되었습니다.`;
   }, [birthDate]);
   return (
@@ -296,6 +296,15 @@ const List = ({ list }: { list: BabyRecord[] }) => {
     return null;
   }
 
+  const [filterList, setFilterList] = useState<BabyRecord[]>([]);
+  useEffect(() => {
+    if (Array.isArray(list)) {
+      const today = dayjs().format("YYYY-MM-DD");
+      const filteredList = list.filter((record) => record.date.includes(today));
+      setFilterList(filteredList);
+    }
+  }, [list]);
+
   return (
     <Card>
       <Table>
@@ -307,7 +316,7 @@ const List = ({ list }: { list: BabyRecord[] }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {list.map((baby: BabyRecord) => (
+          {filterList.map((baby: BabyRecord) => (
             <TableRow key={baby.date}>
               <TableCell>{baby.date}</TableCell>
               <TableCell>{baby.type}</TableCell>
