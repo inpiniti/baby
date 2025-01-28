@@ -74,7 +74,7 @@ export default function Home() {
   };
 
   const fetchData = async () => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .schema("baby")
       .from("history")
       .select("*")
