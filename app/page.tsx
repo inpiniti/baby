@@ -120,7 +120,7 @@ const Profile = () => {
 };
 
 const Day = () => {
-  const birth = dayjs("2024.12.17", "YYYY.MM.DD");
+  const birth = dayjs("2024-12-17", "YYYY-MM-DD");
   const now = dayjs();
   const diffDays = now.diff(birth, "day") + 1;
   const daysSinceBirth = `${diffDays}일`;
