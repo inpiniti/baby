@@ -47,7 +47,7 @@ import { useEffect, useState, useMemo } from "react";
 type BabyRecord = {
   date: string;
   type: string;
-  amount: string;
+  amount: number;
 };
 
 export default function Home() {
@@ -76,7 +76,6 @@ export default function Home() {
       <Statistics list={list} />
       <List list={list} />
       <Add onChange={handleChange} />
-      <AddAmount />
     </div>
   );
 }
@@ -240,7 +239,7 @@ const Statistics = ({ list }: { list: BabyRecord[] }) => {
 
   const totalAmount = useMemo(() => {
     return filterList.reduce((acc, record) => {
-      return acc + parseInt(record.amount);
+      return acc + record.amount;
     }, 0);
   }, [filterList]);
 
@@ -320,13 +319,100 @@ const List = ({ list }: { list: BabyRecord[] }) => {
             <TableRow key={baby.date}>
               <TableCell>{baby.date}</TableCell>
               <TableCell>{baby.type}</TableCell>
-              <TableCell>{baby.amount}</TableCell>
+              <TableCell>
+                <PowderedMilkRecord baby={baby} />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </Card>
   );
+};
+
+const PowderedMilkRecord = ({ baby }: { baby: BabyRecord }) => {
+  const [open, setOpen] = useState(false);
+  const [loadingAmount, setLoadingAmount] = useState<number | null>(null);
+
+  const handleAmount = async (amount: number) => {
+    setLoadingAmount(amount);
+    await fetch("/api/history/post", {
+      method: "POST",
+      body: JSON.stringify({
+        type: baby.type,
+        amount,
+        date: baby.date,
+      }),
+    });
+    setLoadingAmount(null);
+    setOpen(false);
+  };
+
+  if (baby.type !== "분유") return null;
+
+  if (baby.amount === 0) {
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button size="sm">기록 필요</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>
+              <div className="flex items-center gap-1">
+                <CirclePlus />
+                기록 추가
+              </div>
+            </DialogTitle>
+            <DialogDescription>
+              <div className="text-left">분유량을 기록하시겠습니까?</div>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <div className="flex flex-col gap-4">
+              <div
+                className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
+                onClick={() => handleAmount(60)}
+              >
+                {loadingAmount === 60 ? <LoaderCircle /> : <Milk />}
+                60ml
+              </div>
+              <div
+                className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
+                onClick={() => handleAmount(70)}
+              >
+                {loadingAmount === 70 ? <LoaderCircle /> : <Milk />}
+                70ml
+              </div>
+              <div
+                className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
+                onClick={() => handleAmount(80)}
+              >
+                {loadingAmount === 80 ? <LoaderCircle /> : <Milk />}
+                80ml
+              </div>
+              <div
+                className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
+                onClick={() => handleAmount(90)}
+              >
+                {loadingAmount === 90 ? <LoaderCircle /> : <Milk />}
+                90ml
+              </div>
+              <div
+                className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center"
+                onClick={() => handleAmount(100)}
+              >
+                {loadingAmount === 100 ? <LoaderCircle /> : <Milk />}
+                100ml
+              </div>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  return baby.amount;
 };
 
 const Add = ({ onChange }: { onChange: () => void }) => {
@@ -397,45 +483,6 @@ const Add = ({ onChange }: { onChange: () => void }) => {
             >
               {loadingType === "대변" ? <LoaderCircle /> : <Toilet />}
               대변
-            </div>
-          </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-};
-
-const AddAmount = () => {
-  return (
-    <Dialog>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>
-            <div className="flex items-center gap-1">
-              <CirclePlus />
-              기록 추가
-            </div>
-          </DialogTitle>
-          <DialogDescription>
-            <div className="text-left">분유량을 기록하시겠습니까?</div>
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <div className="flex flex-col gap-4">
-            <div className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center">
-              <Milk /> 60ml
-            </div>
-            <div className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center">
-              <Milk /> 70ml
-            </div>
-            <div className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center">
-              <Milk /> 80ml
-            </div>
-            <div className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center">
-              <Milk /> 90ml
-            </div>
-            <div className="flex  bg-black text-white px-6 py-6 rounded-lg gap-1 items-center justify-center">
-              <Milk /> 100ml
             </div>
           </div>
         </DialogFooter>
