@@ -82,13 +82,12 @@ export default function Home() {
 }
 
 const Profile = () => {
-  const birthDate = "2024.12.17";
+  const birthDate = "2024-12-17";
 
   const daysSinceBirth = useMemo(() => {
-    const birth = new Date(birthDate);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - birth.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const birth = dayjs(birthDate);
+    const now = dayjs();
+    const diffDays = now.diff(birth, "day");
     return `${diffDays}일 되었구요.`;
   }, [birthDate]);
 
