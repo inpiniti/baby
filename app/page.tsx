@@ -150,36 +150,39 @@ const LastRecord = ({ list }: { list: BabyRecord[] }) => {
   const [lastPoop, setLastPoop] = useState("");
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (Array.isArray(list)) {
-        const updateLastRecord = (
-          type: string,
-          setLast: (value: string) => void,
-          suffix: string
-        ) => {
-          const record = list.find((record) => record.type === type);
-          if (record) {
-            const diff = dayjs().diff(dayjs(record.date), "minute");
-            const hours = Math.floor(diff / 60);
-            const minutes = diff % 60;
-            let timeString = "";
-            if (hours > 0) {
-              timeString += `${hours}시간 `;
-            }
-            timeString += `${minutes}분 `;
-
-            setLast(timeString + `전에 ${suffix}`);
-          }
-        };
-
-        updateLastRecord("분유", setLastMilk, "분유를 먹었습니다.");
-        updateLastRecord("소변", setLastPee, "소변을 보았습니다.");
-        updateLastRecord("대변", setLastPoop, "대변을 보았습니다.");
-      }
-    }, 60000); // 1분 = 60000밀리초
+    calculateTime();
+    const interval = setInterval(calculateTime, 60000); // 1분 = 60000밀리초
 
     return () => clearInterval(interval);
   }, [list]);
+
+  const calculateTime = () => {
+    if (Array.isArray(list)) {
+      const updateLastRecord = (
+        type: string,
+        setLast: (value: string) => void,
+        suffix: string
+      ) => {
+        const record = list.find((record) => record.type === type);
+        if (record) {
+          const diff = dayjs().diff(dayjs(record.date), "minute");
+          const hours = Math.floor(diff / 60);
+          const minutes = diff % 60;
+          let timeString = "";
+          if (hours > 0) {
+            timeString += `${hours}시간 `;
+          }
+          timeString += `${minutes}분 `;
+
+          setLast(timeString + `전에 ${suffix}`);
+        }
+      };
+
+      updateLastRecord("분유", setLastMilk, "분유를 먹었습니다.");
+      updateLastRecord("소변", setLastPee, "소변을 보았습니다.");
+      updateLastRecord("대변", setLastPoop, "대변을 보았습니다.");
+    }
+  };
 
   return (
     <Card>
