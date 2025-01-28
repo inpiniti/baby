@@ -35,7 +35,26 @@ const post = async ({
   }
 };
 
+const del = async ({
+  date = dayjs().format("YYYY-MM-DD HH:mm:ss"),
+  type = "분유",
+}) => {
+  const { error } = await supabase
+    .schema("baby")
+    .from("history")
+    .delete()
+    .eq("date", date)
+    .eq("type", type);
+
+  if (error) {
+    throw new Error(
+      `Error fetching data from Supabase : ${JSON.stringify(error)}`
+    );
+  }
+};
+
 export default {
   get,
   post,
+  del,
 };

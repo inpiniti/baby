@@ -483,6 +483,7 @@ const List = ({
             <TableHead>시간</TableHead>
             <TableHead>종류</TableHead>
             <TableHead>용량</TableHead>
+            <TableHead>삭제</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -492,6 +493,24 @@ const List = ({
               <TableCell>{baby.type}</TableCell>
               <TableCell>
                 <PowderedMilkRecord baby={baby} onChange={onChange} />
+              </TableCell>
+              <TableCell>
+                <Button
+                  variant={"destructive"}
+                  size="sm"
+                  onClick={async () => {
+                    await fetch("/api/history/delete", {
+                      method: "DELETE",
+                      body: JSON.stringify({
+                        type: baby.type,
+                        date: baby.date,
+                      }),
+                    });
+                    onChange();
+                  }}
+                >
+                  del
+                </Button>
               </TableCell>
             </TableRow>
           ))}
