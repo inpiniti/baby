@@ -68,20 +68,20 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col gap-2 p-4">
+    <div className="flex flex-col gap-4 p-4">
       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
         베이비 로그
       </h1>
       <Profile />
-      <div className="flex gap-2">
+      <div className="flex gap-4">
         <Day />
         <Week />
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-4">
         <LastMilk list={list} />
         <LastPee list={list} />
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-4">
         <LastPoop list={list} />
         <LastSleep list={list} />
       </div>
