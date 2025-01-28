@@ -227,7 +227,29 @@ const LastRecord = ({ list }: { list: BabyRecord[] }) => {
 };
 
 const Statistics = ({ list }: { list: BabyRecord[] }) => {
-  console.log(list);
+  const [filterList, setFilterList] = useState<BabyRecord[]>([]);
+  useEffect(() => {
+    if (Array.isArray(list)) {
+      const today = dayjs().format("YYYY-MM-DD");
+      const filteredList = list.filter((record) => record.date.includes(today));
+      setFilterList(filteredList);
+    }
+  }, [list]);
+
+  const totalRecords = useMemo(() => {
+    return filterList.filter((record) => record.type === "분유").length;
+  }, [filterList]);
+
+  const totalAmount = useMemo(() => {
+    return filterList.reduce((acc, record) => {
+      return acc + parseInt(record.amount);
+    }, 0);
+  }, [filterList]);
+
+  const averageAmount = useMemo(() => {
+    return totalAmount / filterList.length;
+  }, [totalAmount, filterList]);
+
   return (
     <Card>
       <CardHeader>
@@ -246,7 +268,7 @@ const Statistics = ({ list }: { list: BabyRecord[] }) => {
             <Input
               id="name"
               placeholder="Name of your project"
-              value="6회 하였습니다."
+              value={`${totalRecords}회 하였습니다.`}
             />
           </div>
           <div className="flex flex-col space-y-1.5">
@@ -254,7 +276,7 @@ const Statistics = ({ list }: { list: BabyRecord[] }) => {
             <Input
               id="name"
               placeholder="Name of your project"
-              value="400ml을 먹었습니다."
+              value={`${totalAmount}ml을 먹었습니다.`}
             />
           </div>
           <div className="flex flex-col space-y-1.5">
@@ -262,7 +284,7 @@ const Statistics = ({ list }: { list: BabyRecord[] }) => {
             <Input
               id="name"
               placeholder="Name of your project"
-              value="70ml을 먹었습니다."
+              value={`${averageAmount}ml을 먹었습니다.`}
             />
           </div>
         </div>
