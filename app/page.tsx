@@ -52,7 +52,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import axios from "axios";
 
 dayjs.extend(relativeTime);
 import { useEffect, useState, useMemo } from "react";
@@ -75,15 +74,12 @@ export default function Home() {
 
   const fetchData = async () => {
     alert("리스트 갱신");
-    const response = await axios.get(
+    const response = await fetch(
       `/api/history?timestamp=${new Date().getTime()}`,
-      {
-        headers: {
-          "Cache-Control": "no-store",
-        },
-      }
+      { cache: "no-store" }
     );
-    setList(response.data);
+    const data = await response.json();
+    setList(data);
   };
 
   return (
